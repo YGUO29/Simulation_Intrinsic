@@ -7,7 +7,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear cfg;
 %% set tissue parameters
-load('C:\Users\guoyu\Documents\MATLAB\Simulation_Intrinsic\spectra.mat')
+load('D:\=code=\Simulation_Intrinsic\spectra.mat')
 lambda = spectra(:,1); e_HbO = spectra(:,2); e_HbR = spectra(:,3); 
 c_Hb   = 129; % hemoglobin (g/L) used in Hilman 2016
 perc_blood = 0.03; % blood volume / tissue volume
