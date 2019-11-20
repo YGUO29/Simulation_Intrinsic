@@ -36,7 +36,6 @@ end
     cfg.maxdetphoton = cfg.nphoton;
     cfg.maxjumpdebug = cfg.nphoton;
     cfg.maxexitangle = 0.05;
-    
 % ========== define properties ==========
     cfg.prop=[0 0 1 1            % medium 0: the environment
        0.019 mus_skull(2)   0.89 1.55     % medium 1: skin & skull (n changed from 1.37 to 1.55)

@@ -7,38 +7,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear cfg;
 %% set tissue parameters
-load('C:\Users\guoyu\Documents\MATLAB\Simulation_Intrinsic\spectra.mat')
-lambda = spectra(:,1); e_HbO = spectra(:,2); e_HbR = spectra(:,3); 
-c_Hb   = 129; % hemoglobin (g/L) used in Hilman 2016
-
-perc_blood = 0.03; % blood volume / tissue volume
-sat_O2 = 0.75;
-c_HbO = c_Hb*sat_O2; c_HbR = c_Hb*(1-sat_O2);
-mua_HbR = perc_blood.*(e_HbR.*c_HbR.*2.303./64500)./10; % unitsL 1/mm
-mua_HbO = perc_blood.*(e_HbO.*c_HbO.*2.303./64500)./10;
-mua_HbT = mua_HbO+mua_HbR;
-
-WLs = [470 530 590 625 730 850];
-ind = floor(interp1(lambda,1:length(lambda), WLs));
-
-figure('DefaultAxesFontSize',18, 'DefaultLineLineWidth', 2),
-
-subplot(121), hold on, set(gca, 'YScale', 'log')
-semilogy(lambda, mua_HbR), semilogy(spectra(:,1),mua_HbO),
-semilogy(lambda,mua_HbT,'k')
-scatter(lambda(ind),mua_HbT(ind),32)
-for i = 1:length(ind)
-text(lambda(ind(i))+5,mua_HbT(ind(i)),num2str(mua_HbT(ind(i)), 2))
+load('C:\Users\guoyu\Documents\MATLAB\Simulation_Intrinsic\optical_para.mat')
+for i = 1:length(optical_para_label)
+    eval([optical_para_label{i}, '= optical_para(:,i);']);
 end
-title('Absorption coefficient')
-legend('mua-HbR', 'mua-HbO2', 'mua-HbT')
-subplot(122), hold on, set(gca, 'YScale', 'log')
-semilogy(spectra(:,1),e_HbR), hold on, semilogy(spectra(:,1),e_HbO)
-for i = 1:length(ind); xline(lambda(ind(i)),'--'); end
-title('Moler extinction coefficient')
-legend('\epsilon-HbR', '\epsilon-HbO2')
-
-
 %% preparing the input data
 figure
     % set seed to make the simulation repeatible
@@ -126,20 +98,19 @@ figure
     title(['Exit position, FWHM: ',num2str(DetExitSize,3),'mm'])
 %% plot pathlength
 clear DetMeanPathlength
-det2 = det1;
-det2.ppath = det1.ppath(DetInd,:);
+det2 = det1{1};
+det2.ppath = det1{1}.ppath(det1{1}.DetInd,:).*cfg.unitinmm;
 
 for i = 1:length(lambda)
     cfg.prop=[0 0 1 1            % medium 0: the environment
-%        0.019 7.8   0.89 1.55     % medium 1: skin & skull (n changed from 1.37 to 1.55)
-%        0.004 0.009 0.89 1.37     % medium 2: CSF
-       mua_HbT(i) 21 0.82, 1.37   ];   % medium 3: gray matter
+    brain_mua(i) gray_matter_mus(i) gray_matter_g(i), 1.37   % medium 1: gray matter
+    brain_mua(i) white_matter_mus(i) white_matter_g(i), 1.37];   % medium 2: white matter
    
 %       DetWeight = exp( -mua_HbT(ind(i)) *DetPathlength);
 %       DetMeanPathlength(i) = sum(DetPathlength.*DetWeight) / sum(DetWeight(:));
 
     avgpath = mcxmeanpath(det2,cfg.prop);
-    DetMeanPathlength(i) = avgpath;
+    DetMeanPathlength(i) = sum(avgpath);
 %     DetWeight = mcxdetweight(det1,cfg.prop);
 %     DetPathlength = det1.ppath.*repmat(DetWeight(:),1,size(det1.ppath,2));
 %     DetMeanPathlength(i) = cfg.unitinmm*sum(DetPathlength(:,2)) / sum(DetWeight(:));

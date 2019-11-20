@@ -17,8 +17,6 @@ mua_HbR = perc_blood.*(e_HbR.*c_HbR.*2.303./64500)./10; % unitsL 1/mm
 mua_HbO = perc_blood.*(e_HbO.*c_HbO.*2.303./64500)./10;
 mua_HbT = mua_HbO+mua_HbR;
 
-WLs = [470 530 590 625 730 850];
-ind = floor(interp1(lambda,1:length(lambda), WLs));
 
 figure('DefaultAxesFontSize',18, 'DefaultLineLineWidth', 2),
 subplot(121), hold on, set(gca, 'YScale', 'log')
