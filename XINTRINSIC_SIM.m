@@ -40,7 +40,7 @@ ind = floor(interp1(lambda,1:length(lambda), WLs));
     cfg.detpos=[cfg.size(1)/2, cfg.size(2)/2, 0, min(cfg.size(1)/2, cfg.size(2)/2)]; % [x y z radius]
     cfg.maxdetphoton = cfg.nphoton;
     cfg.maxjumpdebug = cfg.nphoton;
-    cfg.maxexitangle = 0.05;
+    cfg.maxexitangle = NA;
 % ========== define a 3 layer structure ==========
 cfg.config = 'without skull';
 switch cfg.config
@@ -63,15 +63,15 @@ end
     cfg.autopilot=1;
     cfg.gpuid=1;
 % ========== output control ==========
-    cfg.issaveexit = 1;
+    cfg.savedetflag = 'dpxv';
 %%
 f1 = cell(1,length(ind));
 seeds = f1;
 det1 = f1;
 traj = f1;
 figure('DefaultAxesFontSize',18, 'DefaultLineLineWidth', 2,'color','w')
-for i = 1:length(ind)
-% for i = 1
+% for i = 1:length(ind)
+for i = 1
     switch cfg.config
         case 'without skull'
             cfg.prop=[0 0 1 1            % medium 0: the environment
@@ -95,7 +95,7 @@ for i = 1:length(ind)
     ExitAngle   = sin(vecnorm(det1{i}.v(:,1:2)')./vecnorm(det1{i}.v')); % sin_theta (NA)
     det1{i}.DetInd      = find(ExitAngle < NA);
     det1{i}.DetNumber   = length(det1{i}.DetInd);
-    DetExitPosition = det1{i}.p(det1{i}.DetInd,1:2);
+    det1{i}.DetExitPos  = det1{i}.p(det1{i}.DetInd,1:2);
 % ========== plot figure ==========
     subplot(2,3,i);
     I1 = log10(squeeze(sum(f1{i}.data(:,size(cfg.vol,1)./2+1,:,:),4))');
@@ -134,7 +134,8 @@ end
 
 %%
 f2 = cell(1,length(ind));
-det2 = cell(1,length(ind));
+det2 = f2;
+traj2 = f2;
 jac = cell(1,length(ind));
 cc = jac;
 fig1 = figure('DefaultAxesFontSize',18, 'DefaultLineLineWidth', 2,'color','w');
@@ -146,17 +147,17 @@ figure(fig1), hold on
 newcfg=cfg;
 newcfg.outputtype='jacobian';
 
-% for i = 1
-for i = 1:length(ind)
-newcfg.seed=seeds{i}.data(:,det1{i}.DetInd);
-newcfg.detphotons=det1{i}.data(:,det1{i}.DetInd);
+for i = 1
+% for i = 1:length(ind)
+newcfg.seed = seeds{i}.data(:,det1{i}.DetInd);
+newcfg.detphotons = det1{i}.data(:,det1{i}.DetInd);
 
 cfg.prop=[0 0 1 1            % medium 0: the environment
 skull_mua(ind(i)) skull_mus(ind(i)) 0.9337, 1.56 % medium 1: skull
 brain_mua(ind(i)) gray_matter_mus(ind(i)) gray_matter_g(ind(i)), 1.37   % medium 2: gray matter
 brain_mua(ind(i)) white_matter_mus(ind(i)) white_matter_g(ind(i)), 1.37];   % medium 3: white matter
 
-[f2{i}, det2{i}, vol2, seeds2]=mcxlab(newcfg);
+[f2{i}, det2{i}, vol2, seeds2,traj2{i}] = mcxlab(newcfg);
 jac{i}=sum(f2{i}.data,4);
 
 cc{i} = log10(abs(squeeze(sum(jac{i}(:,size(cfg.vol,1)./2+1,:,:),4))));
