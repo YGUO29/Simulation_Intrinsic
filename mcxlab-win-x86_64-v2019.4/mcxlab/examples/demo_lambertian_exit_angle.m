@@ -27,7 +27,7 @@ cfg.issaveexit=1;
 
 cfg.detpos = [25 30 0 2];
 
-%cfg.prop=[0 0 1 1;0.005 0.01 0 1.37]; %try this low-scattering case
+% cfg.prop=[0 0 1 1;0.005 0.01 0 1.37]; %try this low-scattering case
 
 % calculate the flux distribution with the given config
 [flux1,detp1] = mcxlab(cfg);
@@ -44,11 +44,12 @@ R=cfg.detpos(1,4);         % radius of the det
 hedges=abs(R*sin(edges));  % height of each spherical segment for each bin
 zonearea=2*pi*R*(diff(hedges)); % area of each spherical segment
 
-detweight=mmcdetweight(detp1, cfg.prop); % get detected photon weight
+% detweight=mmcdetweight(detp1, cfg.prop); % get detected photon weight
+detweight=mcxdetweight(detp1, cfg.prop); % get detected photon weight
 angularweight=accumarray(bin,detweight); % sum total weight per zone
 
 angularflux=angularweight(1:end-1)'./zonearea;  % calculate flux per angle
-
+figure,
 polar((edges(1:end-1)+edges(2:end))*0.5, angularflux); % plot flux vs angle
 hold on;
 polar(pi-(edges(1:end-1)+edges(2:end))*0.5, angularflux); % mirror to form a circle

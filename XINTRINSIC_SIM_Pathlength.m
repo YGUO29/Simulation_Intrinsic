@@ -86,7 +86,7 @@ figure
     colorbar
     drawnow
     
-    figure,
+    figure, 
     h1 = histogram2(DetExitPosition(:,1),DetExitPosition(:,2),100,...
         'XBinLimits',[cfg.detpos(1)-10, cfg.detpos(1)+10],'YBinLimits',[cfg.detpos(2)-10, cfg.detpos(2)+10],...
         'DisplayStyle','tile','ShowEmptyBins','on');
@@ -97,27 +97,32 @@ figure
     DetExitSize = (xx2 + ii - xx1).*cfg.unitinmm;
     title(['Exit position, FWHM: ',num2str(DetExitSize,3),'mm'])
 %% plot pathlength
-clear DetMeanPathlength
-det2 = det1{1};
-det2.ppath = det1{1}.ppath(det1{1}.DetInd,:).*cfg.unitinmm;
+DetMeanPathlength = zeros(1,length(lambda));
+for k = 1 % rows: different skull thickness
+    det2 = det1{k};
+    det2.ppath = det1{k}.ppath(det1{k}.DetInd,:);
 
-for i = 1:length(lambda)
-    cfg.prop=[0 0 1 1            % medium 0: the environment
-    brain_mua(i) gray_matter_mus(i) gray_matter_g(i), 1.37   % medium 1: gray matter
-    brain_mua(i) white_matter_mus(i) white_matter_g(i), 1.37];   % medium 2: white matter
-   
-%       DetWeight = exp( -mua_HbT(ind(i)) *DetPathlength);
-%       DetMeanPathlength(i) = sum(DetPathlength.*DetWeight) / sum(DetWeight(:));
+    for i = 1:length(lambda) % columes: wavelengths
+        cfg.prop=[0 0 1 1            % medium 0: the environment
+        brain_mua(i) gray_matter_mus(i) gray_matter_g(i), 1.37   % medium 1: gray matter
+        brain_mua(i) white_matter_mus(i) white_matter_g(i), 1.37];   % medium 2: white matter
 
-    avgpath = mcxmeanpath(det2,cfg.prop);
-    DetMeanPathlength(i) = sum(avgpath);
-%     DetWeight = mcxdetweight(det1,cfg.prop);
-%     DetPathlength = det1.ppath.*repmat(DetWeight(:),1,size(det1.ppath,2));
-%     DetMeanPathlength(i) = cfg.unitinmm*sum(DetPathlength(:,2)) / sum(DetWeight(:));
-%     h2 = histogram(DetPathlength);
+    %       DetWeight = exp( -mua_HbT(ind(i)) *DetPathlength);
+    %       DetMeanPathlength(i) = sum(DetPathlength.*DetWeight) / sum(DetWeight(:));
+
+        avgpath = mcxmeanpath(det2,cfg.prop);
+%         DetMeanPathlength(i) = avgpath(1); % pathlength in skull
+        DetMeanPathlength(i) = sum(avgpath(2:3)); % pathlength in brain
+
+    %     DetWeight = mcxdetweight(det1,cfg.prop);
+    %     DetPathlength = det1.ppath.*repmat(DetWeight(:),1,size(det1.ppath,2));
+    %     DetMeanPathlength(i) = cfg.unitinmm*sum(DetPathlength(:,2)) / sum(DetWeight(:));
+    %     h2 = histogram(DetPathlength);
+    end
 end
+%% plot the whole L-lambda curve
 figure('DefaultAxesFontSize',18, 'DefaultLineLineWidth', 2,'color','w'),
-plot(lambda,DetMeanPathlength)
+plot(lambda, DetMeanPathlength)
 hold on, scatter(lambda(ind),DetMeanPathlength(ind),'k*')
 xlabel('wavelength (nm)')
 ylabel('mean pathlength (mm)')

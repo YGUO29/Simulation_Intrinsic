@@ -1,0 +1,33 @@
+nvcc -c -g -lineinfo -Xcompiler -Wall -Xcompiler "/openmp /W0" -DSAVE_DETECTORS -use_fast_math -arch=sm_30 -DMCX_TARGET_NAME='"Fermi MCX"' --compiler-options "" -DMCX_CONTAINER -DUSE_ATOMIC -use_fast_math -o mcx_core.obj  mcx_core.cu
+mcx_core.cu
+c:\cygwin64\home\qianqian\space\autobuild\nightly\mcx\mcx\mcx\src\mcx_core.cu(2021) : warning C4701: potentially uninitialized local variable 'gsrcpattern' used
+c:\cygwin64\home\qianqian\space\autobuild\nightly\mcx\mcx\mcx\src\mcx_core.cu(2021) : warning C4703: potentially uninitialized local pointer variable 'gsrcpattern' used
+nvcc -I/usr/local/cuda/include -I"E:\Applications\CUDA7.5\CUDA7.5/lib/include" -c -D_CRT_SECURE_NO_DEPRECATE -DWIN32 -Xcompiler /openmp  -DMCX_CONTAINER -c -o mcx_utils.obj  mcx_utils.c
+mcx_utils.c
+nvcc -I/usr/local/cuda/include -I"E:\Applications\CUDA7.5\CUDA7.5/lib/include" -c -D_CRT_SECURE_NO_DEPRECATE -DWIN32 -Xcompiler /openmp  -DMCX_CONTAINER -c -o mcx_shapes.obj  mcx_shapes.c
+mcx_shapes.c
+nvcc -I/usr/local/cuda/include -I"E:\Applications\CUDA7.5\CUDA7.5/lib/include" -c -D_CRT_SECURE_NO_DEPRECATE -DWIN32 -Xcompiler /openmp  -DMCX_CONTAINER -c -o tictoc.obj  tictoc.c
+tictoc.c
+nvcc -I/usr/local/cuda/include -I"E:\Applications\CUDA7.5\CUDA7.5/lib/include" -c -D_CRT_SECURE_NO_DEPRECATE -DWIN32 -Xcompiler /openmp  -DMCX_CONTAINER -c -o mcextreme.obj  mcextreme.c
+mcextreme.c
+nvcc -I/usr/local/cuda/include -I"E:\Applications\CUDA7.5\CUDA7.5/lib/include" -c -D_CRT_SECURE_NO_DEPRECATE -DWIN32 -Xcompiler /openmp  -DMCX_CONTAINER -c -o cjson/cJSON.obj  cjson/cJSON.c
+cJSON.c
+cmd /c mex mcx_core.obj mcx_utils.obj mcx_shapes.obj tictoc.obj mcextreme.obj cjson/cJSON.obj -output ../mcxlab/mcx -L"E:\Applications\CUDA7.5\CUDA7.5/lib/x64" -lcudart CXXFLAGS='$CXXFLAGS -g -DSAVE_DETECTORS -DMCX_CONTAINER /openmp  ' LDFLAGS='-L$TMW_ROOT$MATLABROOT/sys/os/$ARCH $LDFLAGS /openmp ' mcxlab.cpp -outdir ../mcxlab -I/usr/local/cuda/include -I"E:\Applications\CUDA7.5\CUDA7.5/lib/include"  
+nvcc -c -g -lineinfo -Xcompiler -Wall -Xcompiler "/openmp /W0" -DSAVE_DETECTORS -use_fast_math -arch=sm_30 -DMCX_TARGET_NAME='"Fermi MCX"' --compiler-options "" -DMCX_CONTAINER -DUSE_ATOMIC -use_fast_math -o mcx_core.obj  mcx_core.cu
+mcx_core.cu
+c:\cygwin64\home\qianqian\space\autobuild\nightly\mcx\mcx\mcx\src\mcx_core.cu(2021) : warning C4701: potentially uninitialized local variable 'gsrcpattern' used
+c:\cygwin64\home\qianqian\space\autobuild\nightly\mcx\mcx\mcx\src\mcx_core.cu(2021) : warning C4703: potentially uninitialized local pointer variable 'gsrcpattern' used
+nvcc -I/usr/local/cuda/include -I"E:\Applications\CUDA7.5\CUDA7.5/lib/include" -c -D_CRT_SECURE_NO_DEPRECATE -DWIN32 -Xcompiler /openmp  -DMCX_CONTAINER -c -o mcx_utils.obj  mcx_utils.c
+mcx_utils.c
+nvcc -I/usr/local/cuda/include -I"E:\Applications\CUDA7.5\CUDA7.5/lib/include" -c -D_CRT_SECURE_NO_DEPRECATE -DWIN32 -Xcompiler /openmp  -DMCX_CONTAINER -c -o mcx_shapes.obj  mcx_shapes.c
+mcx_shapes.c
+nvcc -I/usr/local/cuda/include -I"E:\Applications\CUDA7.5\CUDA7.5/lib/include" -c -D_CRT_SECURE_NO_DEPRECATE -DWIN32 -Xcompiler /openmp  -DMCX_CONTAINER -c -o tictoc.obj  tictoc.c
+tictoc.c
+nvcc -I/usr/local/cuda/include -I"E:\Applications\CUDA7.5\CUDA7.5/lib/include" -c -D_CRT_SECURE_NO_DEPRECATE -DWIN32 -Xcompiler /openmp  -DMCX_CONTAINER -c -o mcextreme.obj  mcextreme.c
+mcextreme.c
+nvcc -I/usr/local/cuda/include -I"E:\Applications\CUDA7.5\CUDA7.5/lib/include" -c -D_CRT_SECURE_NO_DEPRECATE -DWIN32 -Xcompiler /openmp  -DMCX_CONTAINER -c -o cjson/cJSON.obj  cjson/cJSON.c
+cJSON.c
+CXXFLAGS='-DSAVE_DETECTORS -fopenmp  ' LFLAGS='-fopenmp ' LDFLAGS='' mkoctfile mcx_core.obj mcx_utils.obj mcx_shapes.obj tictoc.obj mcextreme.obj cjson/cJSON.obj -output ../mcxlab/mcx.mex -L"E:\Applications\CUDA7.5\CUDA7.5/lib/x64" -lcudart --mex mcxlab.cpp -I/usr/local/cuda/include -I"E:\Applications\CUDA7.5\CUDA7.5/lib/include"  
+/bin/sh: mkoctfile: command not found
+make: *** [Makefile:230: ../bin/mcx] Error 127
+Build Successfully

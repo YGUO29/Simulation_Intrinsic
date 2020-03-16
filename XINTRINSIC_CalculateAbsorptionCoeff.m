@@ -1,7 +1,7 @@
 %% set tissue parameters
 load('D:\=code=\Simulation_Intrinsic\spectra.mat')
 lambda = spectra(:,1); e_HbO = spectra(:,2); e_HbR = spectra(:,3); 
-c_Hb   = 129; % hemoglobin (g/L) used in Hilman 2016
+c_Hb   = 129.645; % hemoglobin (g/L) used in Hilman 2016
 perc_blood = 0.03; % blood volume / tissue volume
 sat_O2 = 0.75;
 c_HbO = c_Hb*sat_O2; c_HbR = c_Hb*(1-sat_O2);

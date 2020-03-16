@@ -59,6 +59,7 @@ cfg.isreflect=1; % enable reflection at exterior boundary
 cfg.isrefint=1;  % enable reflection at interior boundary too
 cfg.issavedet=1; % enable recording partial pathlength of detected photons
 cfg.detpos=[31 51 1 2];
+cfg.issaveexit = 1;
 tic;
 [f2,det2]=mcxlab(cfg);
 toc;
