@@ -33,13 +33,13 @@ switch cfg.config
     % ========== no skull ==========
     case 'without skull' % 1: gray; 2: white
         cfg.vol = 2.*ones(cfg.size); % 15 mm volume
-        cfg.bounds = round(1.5/cfg.unitinmm); 
+        cfg.bounds = floor(1.5/cfg.unitinmm); 
         cfg.vol(:,:,cfg.bounds+1:end)= 3; % the rest: white matter
         cfg.vol=uint8(cfg.vol);
     case 'without skull off focus' % 
         cfg.srcpos=[cfg.size(1)/2-0.5, cfg.size(2)/2-0.5, -round(0.5/cfg.unitinmm)];
         cfg.vol = 2.*ones(cfg.size); % 15 mm volume
-        cfg.bounds = round(1.5/cfg.unitinmm); 
+        cfg.bounds = floor(1.5/cfg.unitinmm); 
         cfg.vol(:,:,cfg.bounds+1:end)= 3; % the rest: white matter
         cfg.vol=uint8(cfg.vol);
 %         cfg.vol = zeros(cfg.size); % air
@@ -56,15 +56,15 @@ switch cfg.config
     % ========== with skull ==========
     case 'with skull'
         cfg.vol = ones(cfg.size); % 15 mm volume
-        cfg.bounds = [round(0.5/cfg.unitinmm) round(0.5/cfg.unitinmm)+round(1.5/cfg.unitinmm)]; % skull, gray matter, white matter
-        cfg.vol(:,:,cfg.bounds(1)+1:cfg.bounds(2))=2; % 0.5mm: skull
+        cfg.bounds = [floor(0.7/cfg.unitinmm) floor(0.7/cfg.unitinmm)+floor(1.5/cfg.unitinmm)]; % skull, gray matter, white matter
+        cfg.vol(:,:,cfg.bounds(1)+1:cfg.bounds(2))=2; % 0.7mm: skull
         cfg.vol(:,:,cfg.bounds(2)+1:end)=3; % the rest: white matter
         cfg.vol=uint8(cfg.vol);
     case 'with skull off focus' 
         cfg.srcpos=[cfg.size(1)/2-0.5, cfg.size(2)/2-0.5, -round(0.5/cfg.unitinmm)];
         cfg.vol = ones(cfg.size); % 15 mm volume
-        cfg.bounds = [round(0.5/cfg.unitinmm) round(0.5/cfg.unitinmm)+round(1.5/cfg.unitinmm)]; % skull, gray matter, white matter
-        cfg.vol(:,:,cfg.bounds(1)+1:cfg.bounds(2))=2; % 0.5mm: skull
+        cfg.bounds = [floor(0.7/cfg.unitinmm) floor(0.7/cfg.unitinmm)+floor(1.5/cfg.unitinmm)]; % skull, gray matter, white matter
+        cfg.vol(:,:,cfg.bounds(1)+1:cfg.bounds(2))=2; % 0.7mm: skull
         cfg.vol(:,:,cfg.bounds(2)+1:end)=3; % the rest: white matter
         cfg.vol=uint8(cfg.vol);
 %         cfg.vol = zeros(cfg.size); % 15 mm volume

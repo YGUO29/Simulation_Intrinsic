@@ -151,7 +151,7 @@ switch method
             S.DetWeight(i) = sum(mcxdetweight(det_temp1,cfg.prop));
             % calculate perturbed measurement (sum of weights)
             det_temp2.ppath = det_temp2.ppath(ib,:);
-            % error here: the profile index starts from 3 - YG June 2020
+            % error here: the profile index starts from 3
             S.NewDetWeight{i}(xx-(SimCenter-SimVol/2)+1) = sum(mcxdetweight(det_temp2,newcfg.prop));
             profile{i}(para.iRep,xx-(SimCenter-SimVol/2)+1) = -(S.NewDetWeight{i}(xx-(SimCenter-SimVol/2)+1) - S.DetWeight(i)).*100./S.DetWeight(i);
         end
