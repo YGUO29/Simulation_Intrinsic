@@ -28,7 +28,7 @@ for i = 1:length(optical_para_label)
     eval(['para.',optical_para_label{i}, '= optical_para_xs(:,i);']);
 %     subplot(1,7,i), plot(eval(['para.',optical_para_label{i}])), hold on
 end
-para.skull_g = 0.9;
+para.skull_g = 0.92;
 para.WLs = [470 530 590 625 730 850];
 para.ind = floor(interp1(lambda,1:length(lambda), para.WLs));
 % COLOR = hex2rgb(['1B97F7'; '23C249'; 'FAB738'; 'E92716'; '874040'; '000000']);
@@ -66,14 +66,15 @@ config = 'without skull off focus';
 [cfg, det1, seeds] = MC1(config, exitangle, para);
 [profile_depth4, z4, S4]  = pMC(cfg, det1, seeds, 'z', para);
 %%
-% profile_x1 = cell(1,6);
+profile_x1 = cell(1,6);
 
-for i = 1
+for i = 4:8
 
     para.iRep = i;
     exitangle = [0 0.03];
     config = 'with skull';
     para.profile = profile_x1;
+%     para.profile = [];
     para.SimVol = 200;
     [cfg, det1, seeds] = MC(config, exitangle, para);
     [profile_x1, x1, S1]  = pMC(cfg, det1, seeds, 'x', para);
@@ -202,7 +203,7 @@ title(['Spatial Resolution (along X direction) ', cfg.config])
 %% plot along X axis, multiple wavelengths
 nProfile = 6;
 profile = profile_x1;
-% x = x1;
+x = x1;
 
 
 figure('DefaultAxesFontSize',18, 'DefaultLineLineWidth', 2,'color','w','Position',[1440         918        1013         420]);
@@ -211,7 +212,7 @@ for i = 1:nProfile
     delta_mua   = 0.1*para.brain_mua(para.ind(2)).*ones(1,length(profile{i}));
     profile{i}  = mean(profile{i},1)./delta_mua;
 %     h1(i)       = plot(x, profile{i}(1:end-1), 'color', para.COLOR(i,:)); hold on
-    h1(i)       = plot(x, profile{i}(3:end)./max(profile{i}(1:end)), 'color', para.COLOR(i,:)); hold on
+    h1(i)       = plot(x, profile{i}./max(profile{i}), 'color', para.COLOR(i,:)); hold on
 
     [~, ii] = min(abs((profile{i} - max(profile{i})./2)));
     profile_r_dia(i) = 2*abs(x(ii));

@@ -68,16 +68,17 @@ config = 'without skull off focus';
 %%
 % profile_x1 = cell(1,6);
 
-for i = 48
-    tic
-%     para.iRep = i;
+for i = 1
+
+    para.iRep = i;
     exitangle = [0 0.03];
     config = 'with skull';
-    para.profile = profile_x1;
+%     para.profile = profile_x1;
     para.SimVol = 200;
     [cfg, det1, seeds] = MC(config, exitangle, para);
     [profile_x1, x1, S1]  = pMC(cfg, det1, seeds, 'x', para);
-    toc
+    close all
+
 end
 
 %
@@ -200,8 +201,8 @@ title(['Spatial Resolution (along X direction) ', cfg.config])
 
 %% plot along X axis, multiple wavelengths
 nProfile = 6;
-% profile = profile_x1;
-x = x1;
+profile = profile_x1;
+% x = x1;
 
 
 figure('DefaultAxesFontSize',18, 'DefaultLineLineWidth', 2,'color','w','Position',[1440         918        1013         420]);
@@ -210,7 +211,7 @@ for i = 1:nProfile
     delta_mua   = 0.1*para.brain_mua(para.ind(2)).*ones(1,length(profile{i}));
     profile{i}  = mean(profile{i},1)./delta_mua;
 %     h1(i)       = plot(x, profile{i}(1:end-1), 'color', para.COLOR(i,:)); hold on
-    h1(i)       = plot(x, profile{i}(1:end-1)./max(profile{i}(1:end-1)), 'color', para.COLOR(i,:)); hold on
+    h1(i)       = plot(x, profile{i}(3:end)./max(profile{i}(1:end)), 'color', para.COLOR(i,:)); hold on
 
     [~, ii] = min(abs((profile{i} - max(profile{i})./2)));
     profile_r_dia(i) = 2*abs(x(ii));

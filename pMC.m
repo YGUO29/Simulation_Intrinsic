@@ -119,21 +119,21 @@ switch method
     case 'x'
         SimCenter = cfg.size(1)/2-1; 
         % ========== change properties in X direction  ==========
-        S.NewDetWeight{i} = zeros(1,SimVol);
+        S.NewDetWeight{i} = zeros(1,SimVol+1);
         fwait = waitbar(0,'Perturbation simulation started ...');
 
-        for xx = SimCenter-SimVol/2+2: SimCenter+SimVol/2+1
-            waitbar((xx-(SimCenter-SimVol/2))/SimVol,fwait,['Perturbation simulation x-direction, i = ',num2str(i), ', ', num2str((xx-(SimCenter-SimVol/2))),'/',num2str(SimVol)]);
+        for xx = SimCenter: SimCenter + SimVol/2 % 149~249
+            waitbar((xx-SimCenter)/(SimVol/2),fwait,['Perturbation simulation x-direction, i = ',num2str(i), ', ', xx-SimCenter,'/',num2str(SimVol/2)]);
 
             % ========== define tissue structure ==========
             newcfg.vol = cfg.vol;
             switch cfg.config
                 case {'without skull', 'without skull off focus'} % perturbate along x, at the y-value of SimCenter+1 to avoid the dip artifact 
-                    newcfg.vol(xx,SimCenter+1,1:cfg.bounds) = 5; % gray matter, perturbed
+                    newcfg.vol(xx, SimCenter, 1:cfg.bounds) = 5; % gray matter, perturbed (+1 because there is a weird dip in the new weights profile if chose the line of "SimCenter")
     %                 newcfg.vol(xx,SimCenter+1,cfg.bounds+1:end) = 6; % white matter, perturbed
-                    newcfg.vol=uint8(newcfg.vol);
+                    newcfg.vol=uint8(newcfg.vol); 
                 case {'with skull', 'with skull off focus'}
-                    newcfg.vol(xx,SimCenter+1,cfg.bounds(1)+1:cfg.bounds(2)) = 5; % gray matter, perturbed
+                    newcfg.vol(xx, SimCenter, cfg.bounds(1)+1 : cfg.bounds(2)) = 5; % gray matter, perturbed
     %                 newcfg.vol(xx,SimCenter+1,cfg.bounds(2)+1:end) = 6; % white matter, perturbed
                     newcfg.vol=uint8(newcfg.vol);
                 otherwise
@@ -152,13 +152,17 @@ switch method
             % calculate perturbed measurement (sum of weights)
             det_temp2.ppath = det_temp2.ppath(ib,:);
             % error here: the profile index starts from 3 - YG June 2020
-            S.NewDetWeight{i}(xx-(SimCenter-SimVol/2)+1) = sum(mcxdetweight(det_temp2,newcfg.prop));
-            profile{i}(para.iRep,xx-(SimCenter-SimVol/2)+1) = -(S.NewDetWeight{i}(xx-(SimCenter-SimVol/2)+1) - S.DetWeight(i)).*100./S.DetWeight(i);
+            S.NewDetWeight{i}(SimVol/2+1 + (xx-SimCenter)) = sum(mcxdetweight(det_temp2,newcfg.prop));
+            profile{i}(para.iRep, SimVol/2+1 + (xx-SimCenter)) = -(S.NewDetWeight{i}(SimVol/2+1 + (xx-SimCenter)) - S.DetWeight(i)).*100./S.DetWeight(i);
+            if xx ~= SimCenter
+                 profile{i}(para.iRep, SimVol/2+1 - (xx-SimCenter)) = profile{i}(para.iRep, SimVol/2+1 + (xx-SimCenter));
+            end
         end
     %     profile{i} = -(S.NewDetWeight{i} - S.DetWeight(i)).*100./S.DetWeight(i);
         % error here: x should be from -SimVol/2+2:SimVol/2+1 - YG June
         % 2020
         x = [-SimVol/2:SimVol/2].*cfg.unitinmm;
+        
         save('profile_temp.mat','profile')
     
     case 'r'
