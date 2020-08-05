@@ -67,9 +67,9 @@ config = 'without skull off focus';
 [profile_depth4, z4, S4]  = pMC(cfg, det1, seeds, 'z', para);
 %%
 profile_x1 = cell(1,6);
-
-for i = 4:8
-
+tEnd = zeros(1, 50);
+for i = 8:13
+    tStart = tic;
     para.iRep = i;
     exitangle = [0 0.03];
     config = 'with skull';
@@ -79,7 +79,7 @@ for i = 4:8
     [cfg, det1, seeds] = MC(config, exitangle, para);
     [profile_x1, x1, S1]  = pMC(cfg, det1, seeds, 'x', para);
     close all
-
+    tEnd(i) = toc(tStart);
 end
 
 %
@@ -210,8 +210,9 @@ figure('DefaultAxesFontSize',18, 'DefaultLineLineWidth', 2,'color','w','Position
 profile_r_dia = zeros(1,nProfile);
 for i = 1:nProfile
     delta_mua   = 0.1*para.brain_mua(para.ind(2)).*ones(1,length(profile{i}));
-    profile{i}  = mean(profile{i},1)./delta_mua;
-%     h1(i)       = plot(x, profile{i}(1:end-1), 'color', para.COLOR(i,:)); hold on
+%     profile{i}  = mean(profile{i},1)./delta_mua;
+    profile{i}  = profile{i}(7,:)./delta_mua;
+%     h1(i)       = plot(x, profile{i}, 'color', para.COLOR(i,:)); hold on
     h1(i)       = plot(x, profile{i}./max(profile{i}), 'color', para.COLOR(i,:)); hold on
 
     [~, ii] = min(abs((profile{i} - max(profile{i})./2)));
