@@ -20,8 +20,8 @@ optical_para_xs(:,7) = brain_mua;
 %%
 clear cfg;
 % set tissue parameters
-load('D:\=code=\Simulation_Intrinsic\optical_para_xs.mat')
-load('D:\=code=\Simulation_Intrinsic\spectra.mat')
+load('optical_para_xs.mat')
+load('spectra.mat')
 lambda = spectra(:,1);
 % figure,
 for i = 1:length(optical_para_label)
