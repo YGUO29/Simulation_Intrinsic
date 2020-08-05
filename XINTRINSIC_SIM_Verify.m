@@ -1,0 +1,27 @@
+% verification for scattering events
+%%
+plotON = 1;
+nPhoton = [];
+i = 1; % which wavelength
+[traj_group, max_depth] = XINTRINSIC_SIM_PlotTraj(S.traj2{i}, cfg.bounds, [1 300 0 60], nPhoton, plotON);
+
+%% plot visitation depth
+figure, 
+hist(max_depth, 300)
+%%
+CosTheta = cell(1, length(traj_group));
+Dist = CosTheta;
+for iPhoton = 1:length(traj_group)
+    for iEvent = 1:length(traj_group{iPhoton} - 1)
+        u = traj_group{iPhoton}(iEvent,:);
+        v = traj_group{iPhoton}(iEvent+1,:);
+        CosTheta{iPhoton}(iEvent) = (dot(u,v) / (norm(u)*norm(v)));
+        Dist{iPhoton}(iEvent) = norm(u - v);
+    end
+end
+
+figure,
+subplot(1,2,1), hist(cell2mat(CosTheta), 360)
+subplot(1,2,2), hist(cell2mat(Dist), 360)
+
+
