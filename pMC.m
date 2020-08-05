@@ -123,7 +123,8 @@ switch method
         fwait = waitbar(0,'Perturbation simulation started ...');
 
         for xx = SimCenter: SimCenter + SimVol/2 % 149~249
-            waitbar((xx-SimCenter)/(SimVol/2),fwait,['Perturbation simulation x-direction, i = ',num2str(i), ', ', xx-SimCenter,'/',num2str(SimVol/2)]);
+            waitbar((xx-SimCenter)/(SimVol/2),fwait,['Perturbation simulation x-direction, rep = ', num2str(para.iRep), ...
+                ', wavelength = ',num2str(i), ', ', num2str(xx-SimCenter),'/',num2str(SimVol/2)]);
 
             % ========== define tissue structure ==========
             newcfg.vol = cfg.vol;
