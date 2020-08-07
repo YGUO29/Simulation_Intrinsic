@@ -141,7 +141,7 @@ for i = 1:length(para.ind)
     det1{i}.DetExitPos  = det1{i}.p(det1{i}.DetInd,1:2);
 % ========== plot figure ==========
     subplot(2,3,i);
-    I1 = log10(squeeze(sum(f1{i}.data(:,size(cfg.vol,1)./2+1,:,:),4))');
+    I1 = log10(squeeze(sum(f1{i}.data(:,round(cfg.size(2)./2),:,:),4))');
     I1(I1<0) = 0;
 %         if i == 1
         cmax1 = max(I1(:)); cmin1 = min(I1(:));
