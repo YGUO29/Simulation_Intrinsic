@@ -17,7 +17,8 @@ optical_para_xs(:,1) = skull_mus;
 optical_para_xs(:,2) = skull_mua;
 optical_para_xs(:,7) = brain_mua;
 
-%%
+%% load updated parameters
+addpath(genpath(cd));
 clear cfg;
 % set tissue parameters
 load('optical_para_xs.mat')
@@ -29,6 +30,8 @@ for i = 1:length(optical_para_label)
 %     subplot(1,7,i), plot(eval(['para.',optical_para_label{i}])), hold on
 end
 para.skull_g = 0.92;
+para.skull_thick = 0.5; 
+para.gm_thick = 1.3;
 para.WLs = [470 530 590 625 730 850];
 para.ind = floor(interp1(lambda,1:length(lambda), para.WLs));
 % COLOR = hex2rgb(['1B97F7'; '23C249'; 'FAB738'; 'E92716'; '874040'; '000000']);
@@ -38,6 +41,30 @@ para.COLOR = [   0       0       1;
             1       0       0;
             0.5     0       0;
             0.25    0       0];
+        
+%% 
+% [cfg, det1, seeds] = MC_test(config, [0 1], para);
+% newcfg              = cfg;
+% newcfg.seed         = seeds{i}.data(:,det1{i}.DetInd);
+% newcfg.detphotons   = det1{i}.data(:,det1{i}.DetInd);
+% [S.f2{i}, S.det2{i}, S.vol2, S.seeds2, S.traj2{i}] = mcxlab(newcfg);
+profile_x1 = cell(1,6);
+tEnd = zeros(1, 50);
+for i = 8
+    tStart = tic;
+    para.iRep = i;
+    exitangle = [0 0.03];
+    config = 'with skull';
+    para.profile = profile_x1;
+%     para.profile = [];
+    para.SimVol = 120;
+%     [cfg, det1, seeds] = MC(config, exitangle, para);
+    [cfg, det1, seeds] = MC_test0806(config, exitangle, para);
+    [profile_x1, x1, S1]  = pMC(cfg, det1, seeds, 'x', para);
+    close all
+    tEnd(i) = toc(tStart);
+end
+
 %%
 % [0.8548 0.8844] angled with 0.87NA, deviation = asin(0.03) (±1.7191
 % degrees), 0.87 determined by objective radius = 16.32, working distance =
@@ -65,22 +92,6 @@ exitangle = [0.8548 0.8844];
 config = 'without skull off focus';
 [cfg, det1, seeds] = MC1(config, exitangle, para);
 [profile_depth4, z4, S4]  = pMC(cfg, det1, seeds, 'z', para);
-%%
-profile_x1 = cell(1,6);
-tEnd = zeros(1, 50);
-for i = 8:13
-    tStart = tic;
-    para.iRep = i;
-    exitangle = [0 0.03];
-    config = 'with skull';
-    para.profile = profile_x1;
-%     para.profile = [];
-    para.SimVol = 200;
-    [cfg, det1, seeds] = MC(config, exitangle, para);
-    [profile_x1, x1, S1]  = pMC(cfg, det1, seeds, 'x', para);
-    close all
-    tEnd(i) = toc(tStart);
-end
 
 %
 exitangle = [0.8548 0.8844];
@@ -211,7 +222,7 @@ profile_r_dia = zeros(1,nProfile);
 for i = 1:nProfile
     delta_mua   = 0.1*para.brain_mua(para.ind(2)).*ones(1,length(profile{i}));
 %     profile{i}  = mean(profile{i},1)./delta_mua;
-    profile{i}  = profile{i}(7,:)./delta_mua;
+    profile{i}  = profile{i}(1,:)./delta_mua;
 %     h1(i)       = plot(x, profile{i}, 'color', para.COLOR(i,:)); hold on
     h1(i)       = plot(x, profile{i}./max(profile{i}), 'color', para.COLOR(i,:)); hold on
 
