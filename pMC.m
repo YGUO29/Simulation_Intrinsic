@@ -18,7 +18,7 @@ if ~isfield(para,'SimVol')
 else
     SimVol = para.SimVol; % "replay" simulation volume, does not have to be the entire volume (to save time)
 end
-SimCenter = cfg.size(1)/2 - 1; % the illumination center is cfg.size(1)/2-1
+SimCenter = ceil(cfg.size(1)/2); % the illumination center is cfg.size(1)/2-1
 
 %% get initial total photon weights
 % for i = 2
@@ -117,7 +117,7 @@ switch method
     x = (1:SimVol).*cfg.unitinmm;
 
     case 'x'
-        SimCenter = cfg.size(1)/2-1; 
+        SimCenter = ceil(cfg.size(1)/2); 
         % ========== change properties in X direction  ==========
         S.NewDetWeight{i} = zeros(1,SimVol+1);
         fwait = waitbar(0,'Perturbation simulation started ...');
