@@ -8,7 +8,7 @@ function [cfg, det1, seeds] = MC_test0806(config, exitangle, para)
     cfg.seed = randi(2^32);
     cfg.nphoton=1e7;
     cfg.unitinmm = 1/30; % define units in mm
-    cfg.size = [301 301 300]; % if unit = 0.05: 15mm cube 
+    cfg.size = [300 301 300]; % if unit = 0.05: 15mm cube 
 %     cfg.size = [400 400 500]; % if unit = 0.005: 2x2x2.5mm cube
     % time-domain simulation parameters
     cfg.tstart=0;

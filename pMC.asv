@@ -162,7 +162,7 @@ switch method
     %     profile{i} = -(S.NewDetWeight{i} - S.DetWeight(i)).*100./S.DetWeight(i);
         % error here: x should be from -SimVol/2+2:SimVol/2+1 - YG June
         % 2020
-        x = [-SimVol/2:SimVol/2-1].*cfg.unitinmm + cfg.unitinmm/2;
+        x = [-SimVol/2:SimVol/2].*cfg.unitinmm;
         
         save('profile_temp.mat','profile')
     

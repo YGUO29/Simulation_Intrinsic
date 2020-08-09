@@ -122,9 +122,9 @@ switch method
         S.NewDetWeight{i} = zeros(1,SimVol+1);
         fwait = waitbar(0,'Perturbation simulation started ...');
 
-        for xx = SimCenter - SimVol/2: SimCenter + SimVol/2 - 1 % center = 151, (151-60)~(151+60)
-            waitbar((xx - SimCenter + SimVol/2 + 1)/(SimVol),fwait,['PMC x-direction, rep = ', num2str(para.iRep), ...
-                ', wavelength = ',num2str(i), ', ', num2str(xx- SimCenter + SimVol/2 + 1),'/',num2str(SimVol)]);
+        for xx = SimCenter: SimCenter + SimVol/2 % 149~249
+            waitbar((xx-SimCenter)/(SimVol/2),fwait,['Perturbation simulation x-direction, rep = ', num2str(para.iRep), ...
+                ', wavelength = ',num2str(i), ', ', num2str(xx-SimCenter),'/',num2str(SimVol/2)]);
 
             % ========== define tissue structure ==========
             newcfg.vol = cfg.vol;
@@ -153,16 +153,16 @@ switch method
             % calculate perturbed measurement (sum of weights)
             det_temp2.ppath = det_temp2.ppath(ib,:);
             % error here: the profile index starts from 3 - YG June 2020
-            S.NewDetWeight{i}(xx - SimCenter + SimVol/2 + 1) = sum(mcxdetweight(det_temp2,newcfg.prop));
-            profile{i}(para.iRep, xx - SimCenter + SimVol/2 + 1) = -(S.NewDetWeight{i}(xx - SimCenter + SimVol/2 + 1) - S.DetWeight(i)).*100./S.DetWeight(i);
-%             if xx ~= SimCenter
-%                  profile{i}(para.iRep, SimVol/2+1 - (xx-SimCenter)) = profile{i}(para.iRep, SimVol/2+1 + (xx-SimCenter));
-%             end
+            S.NewDetWeight{i}(SimVol/2+1 + (xx-SimCenter)) = sum(mcxdetweight(det_temp2,newcfg.prop));
+            profile{i}(para.iRep, SimVol/2+1 + (xx-SimCenter)) = -(S.NewDetWeight{i}(SimVol/2+1 + (xx-SimCenter)) - S.DetWeight(i)).*100./S.DetWeight(i);
+            if xx ~= SimCenter
+                 profile{i}(para.iRep, SimVol/2+1 - (xx-SimCenter)) = profile{i}(para.iRep, SimVol/2+1 + (xx-SimCenter));
+            end
         end
     %     profile{i} = -(S.NewDetWeight{i} - S.DetWeight(i)).*100./S.DetWeight(i);
         % error here: x should be from -SimVol/2+2:SimVol/2+1 - YG June
         % 2020
-        x = [-SimVol/2:SimVol/2-1].*cfg.unitinmm + cfg.unitinmm/2;
+        x = [-SimVol/2:SimVol/2].*cfg.unitinmm;
         
         save('profile_temp.mat','profile')
     

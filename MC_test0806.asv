@@ -8,7 +8,7 @@ function [cfg, det1, seeds] = MC_test0806(config, exitangle, para)
     cfg.seed = randi(2^32);
     cfg.nphoton=1e7;
     cfg.unitinmm = 1/30; % define units in mm
-    cfg.size = [301 301 300]; % if unit = 0.05: 15mm cube 
+    cfg.size = [300 301 300]; % if unit = 0.05: 15mm cube 
 %     cfg.size = [400 400 500]; % if unit = 0.005: 2x2x2.5mm cube
     % time-domain simulation parameters
     cfg.tstart=0;
@@ -22,7 +22,7 @@ function [cfg, det1, seeds] = MC_test0806(config, exitangle, para)
     NA = 0.03;
     cfg.srcparam1=[asin(NA) 0 0 0];
     % cfg.srcparam1 = 100; %radius for the disk
-    cfg.srcpos=[cfg.size(1)/2 + 1, cfg.size(2)/2 + 1, 0.99]; % floor this x/y number to get the index of the grid (center = 125.5, ind = 125, in this case)
+    cfg.srcpos=[cfg.size(1)/2, cfg.size(2)/2 + 1, 0.99]; % floor this x/y number to get the index of the grid (center = 125.5, ind = 125, in this case)
     cfg.srcdir=[0 0 1];
     
     cfg.detpos=[cfg.size(1)/2 + 1, cfg.size(2)/2 + 1, 0, min(cfg.size(1)/sqrt(2), cfg.size(2)/sqrt(2))]; % [x y z radius]
@@ -129,8 +129,8 @@ for i = 1:length(para.ind)
     [f1{i},det1{i},vol,seeds{i},traj{i}]=mcxlab(cfg);
     toc;
     % ===== show light distribution at the surface ==== 
-    surface = squeeze(sum(f1{i}.data(:,:,1,:),4))';
-    surface_profile = surface(:,cfg.size(2));
+%     surface = squeeze(sum(f1{i}.data(:,:,1,:),4))';
+%     surface_profile = surface(:,round(cfg.size(2)/2));
 % ========== detected photons ==========
     ExitAngle           = vecnorm(det1{i}.v(:,1:2)'); % sin_theta (i.e. NA), v is a normal vector
 %     det1{i}.DetInd1     = find(det1{i}.p(:,3)<round(0.5/cfg.unitinmm) & det1{i}.v(:,3)<0); % collect photons only exit from the 0-plane 
@@ -141,7 +141,7 @@ for i = 1:length(para.ind)
     det1{i}.DetExitPos  = det1{i}.p(det1{i}.DetInd,1:2);
 % ========== plot figure ==========
     subplot(2,3,i);
-    I1 = log10(squeeze(sum(f1{i}.data(:,size(cfg.vol,1)./2+1,:,:),4))');
+    I1 = log10(squeeze(sum(f1{i}.data(:,round(cfg.size(2)./2),:,:),4))');
     I1(I1<0) = 0;
 %         if i == 1
         cmax1 = max(I1(:)); cmin1 = min(I1(:));

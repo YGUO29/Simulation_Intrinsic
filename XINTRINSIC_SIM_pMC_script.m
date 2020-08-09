@@ -50,14 +50,14 @@ para.COLOR = [   0       0       1;
 % [S.f2{i}, S.det2{i}, S.vol2, S.seeds2, S.traj2{i}] = mcxlab(newcfg);
 profile_x1 = cell(1,6);
 tEnd = zeros(1, 50);
-for i = 8
+for i = 1
     tStart = tic;
     para.iRep = i;
     exitangle = [0 0.03];
     config = 'with skull';
     para.profile = profile_x1;
 %     para.profile = [];
-    para.SimVol = 120;
+    para.SimVol = 122;
 %     [cfg, det1, seeds] = MC(config, exitangle, para);
     [cfg, det1, seeds] = MC_test0806(config, exitangle, para);
     [profile_x1, x1, S1]  = pMC(cfg, det1, seeds, 'x', para);
@@ -213,16 +213,16 @@ title(['Spatial Resolution (along X direction) ', cfg.config])
 
 %% plot along X axis, multiple wavelengths
 nProfile = 6;
-profile = profile_x1;
-x = x1;
+% profile = profile_x1;
+% x = x1;
 
 
 figure('DefaultAxesFontSize',18, 'DefaultLineLineWidth', 2,'color','w','Position',[1440         918        1013         420]);
 profile_r_dia = zeros(1,nProfile);
 for i = 1:nProfile
     delta_mua   = 0.1*para.brain_mua(para.ind(2)).*ones(1,length(profile{i}));
-%     profile{i}  = mean(profile{i},1)./delta_mua;
-    profile{i}  = profile{i}(1,:)./delta_mua;
+    profile{i}  = mean(profile{i},1)./delta_mua;
+%     profile{i}  = profile{i}(3,:)./delta_mua;
 %     h1(i)       = plot(x, profile{i}, 'color', para.COLOR(i,:)); hold on
     h1(i)       = plot(x, profile{i}./max(profile{i}), 'color', para.COLOR(i,:)); hold on
 
